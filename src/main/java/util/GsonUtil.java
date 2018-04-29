@@ -7,7 +7,7 @@ import inter.domain.InterTransaction;
 import java.io.Serializable;
 
 public class GsonUtil {
-    public <T> T decode(String json, Class<InterTransaction> type) {
+    public <T> T decode(String json, Class type) {
         Gson gson = new GsonBuilder().create();
 
         return gson.<T>fromJson(json, type.getClass());
