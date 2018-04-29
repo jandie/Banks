@@ -12,11 +12,11 @@ public class AbnTransaction implements Serializable {
     private String fromAccount;
     private String toBankCode;
     private String fromBankCode;
-    private long amount;
+    private double amount;
     private String fromReference;
     private AbnState state;
 
-    public AbnTransaction(String toAccount, String fromAccount, long amount, String fromReference) {
+    public AbnTransaction(String toAccount, String fromAccount, double amount, String fromReference) {
         AccountCodeUtil accountCodeUtil = new AccountCodeUtil();
 
         this.toAccount = toAccount;
@@ -45,7 +45,7 @@ public class AbnTransaction implements Serializable {
         return fromBankCode;
     }
 
-    public long getAmount() {
+    public double getAmount() {
         return amount;
     }
 

@@ -34,7 +34,7 @@ public class AbnMessageLogic {
         };
     }
 
-    public void sendTransaction(String from, String to, long amount) {
+    public void sendTransaction(String from, String to, double amount) {
         AbnTransaction transaction = new AbnTransaction(
                 to,
                 from,
