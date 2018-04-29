@@ -14,7 +14,7 @@ public class AbnMain {
             String i = in.next();
             abnMessageLogic.sendTransaction(
                     "NLABNA0123456781",
-                    "NLABNA0123456782",
+                    "NLRABO0123456782",
                     1.25);
         }
     }

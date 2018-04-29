@@ -4,21 +4,21 @@ import org.junit.Test;
 
 public class AbnIT {
     @Test
-    public void SendTenThousandTransactions() {
-        sendTransactions(10000);
+    public void SendTenThousandTransactionsToRabo() {
+        sendTransactionsToRabo(10000);
     }
 
     @Test
-    public void SendOneTransactions() {
-        sendTransactions(1);
+    public void SendOneTransactionsToRabo() {
+        sendTransactionsToRabo(1);
     }
 
-    private void sendTransactions(int amount) {
+    private void sendTransactionsToRabo(int amount) {
         AbnTransactionSender abnTransactionSender = new AbnTransactionSender();
 
         for (Integer i = 0; i < amount; i++) {
             abnTransactionSender.sendTransaction(
-                    new AbnTransaction("NLABNA0123456789",
+                    new AbnTransaction("NLRABO0123456789",
                             "NLABNA0123456789", 1 + i, i.toString())
             );
         }

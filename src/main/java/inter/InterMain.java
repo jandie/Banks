@@ -9,10 +9,7 @@ public class InterMain {
 
     public static void main(String[] args) {
         routerLogic = new RouterLogic();
-
-        System.out.println("Enter something to exit");
         Scanner in = new Scanner(System.in);
-
         String s = in.next();
     }
 }
