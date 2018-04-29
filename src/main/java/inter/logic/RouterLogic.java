@@ -32,9 +32,11 @@ public class RouterLogic {
                 RouterLogic.this.handleNewFeedback(feedback);
             }
         };
+
+        System.out.println("Router initialized!");
     }
 
-    private void handleNewTransaction(InterTransaction transaction) {
+    private synchronized  void handleNewTransaction(InterTransaction transaction) {
         transactionSender.sendTransaction(transaction);
         transactionReceiver.acknowledge();
 
@@ -49,7 +51,7 @@ public class RouterLogic {
         System.out.println("Routed " + transaction);
     }
 
-    private void handleNewFeedback(InterFeedback feedback) {
+    private synchronized  void handleNewFeedback(InterFeedback feedback) {
         feedbackSender.sendFeedback(feedback);
         feedbackReceiver.acknowledge();
 

@@ -34,7 +34,7 @@ public class AbnMessageLogic {
         };
     }
 
-    public void sendTransaction(String from, String to, double amount) {
+    public synchronized  void sendTransaction(String from, String to, double amount) {
         AbnTransaction transaction = new AbnTransaction(
                 to,
                 from,
@@ -48,7 +48,7 @@ public class AbnMessageLogic {
         transactionCounter ++;
     }
 
-    private void handleTransaction(AbnTransaction transaction) {
+    private synchronized  void handleTransaction(AbnTransaction transaction) {
         System.out.println("Received " + transaction);
 
         sendFeedback(
@@ -60,7 +60,7 @@ public class AbnMessageLogic {
         abnTransactionReceiver.acknowledge();
     }
 
-    private void handleFeedback(AbnFeedback feedback) {
+    private synchronized  void handleFeedback(AbnFeedback feedback) {
         AbnTransaction transaction = feedback.getTransaction();
         transaction.setState(feedback.getState());
         System.out.println("Updated " + transaction + ", message: " + feedback.getMessage());
@@ -68,7 +68,7 @@ public class AbnMessageLogic {
         abnFeedbackReceiver.acknowledge();
     }
 
-    private void sendFeedback(AbnFeedback abnFeedback) {
+    private synchronized  void sendFeedback(AbnFeedback abnFeedback) {
         abnFeedbackSender.sendFeedback(abnFeedback);
     }
 }

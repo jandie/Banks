@@ -7,7 +7,7 @@ import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 import inter.domain.InterFeedback;
 import message.MessageReceiver;
-import util.GsonUtil;
+import util.JsonUtil;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -15,7 +15,7 @@ import java.util.concurrent.TimeoutException;
 public class AbnFeedbackReceiver {
     private MessageReceiver receiver;
     private Envelope currentEnvelope;
-    private GsonUtil gsonUtil = new GsonUtil();
+    private JsonUtil jsonUtil = new JsonUtil();
     private AbnTranslator abnTranslator = new AbnTranslator();
 
     public AbnFeedbackReceiver() {
@@ -28,15 +28,17 @@ public class AbnFeedbackReceiver {
                                            AMQP.BasicProperties properties, byte[] body)
                         throws IOException {
                     String json = new String(body, "UTF-8");
-                    InterFeedback interFeedback = gsonUtil.decode(
+                    InterFeedback interFeedback = jsonUtil.decode(
                             json,
                             InterFeedback.class);
+
+                    currentEnvelope = envelope;
 
                     handleNewFeedback(
                             abnTranslator.feedback(interFeedback)
                     );
 
-                    System.out.println(" [x] Received '" + json + "'");
+                    //System.out.println(" [x] Received '" + json + "'");
                 }
             });
         } catch (IOException | TimeoutException e) {

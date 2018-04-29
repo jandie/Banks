@@ -14,6 +14,8 @@ public class InterTransaction implements Serializable {
     private double amount;
     private String fromReference;
 
+    public InterTransaction() {}
+
     public InterTransaction(String toAccount, String fromAccount, double amount, String fromReference) {
         AccountCodeUtil accountCodeUtil = new AccountCodeUtil();
 

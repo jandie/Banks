@@ -2,19 +2,19 @@ package inter.messaging.transaction;
 
 import inter.domain.InterTransaction;
 import message.MessageSender;
-import util.GsonUtil;
+import util.JsonUtil;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 public class TransactionSender {
     private MessageSender messageSender;
-    private GsonUtil gsonUtil = new GsonUtil();
+    private JsonUtil jsonUtil = new JsonUtil();
 
     public void sendTransaction(InterTransaction transaction) {
         try {
             messageSender = new MessageSender(transaction.getToBankCode());
-            messageSender.send(gsonUtil.encode(transaction));
+            messageSender.send(jsonUtil.encode(transaction));
         } catch (IOException | TimeoutException e) {
             e.printStackTrace();
         } finally {

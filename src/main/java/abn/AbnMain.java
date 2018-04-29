@@ -2,13 +2,20 @@ package abn;
 
 import abn.logic.AbnMessageLogic;
 
-public class AbnMain {
-    public static void main(String[] args) {
-        AbnMessageLogic abnMessageLogic = new AbnMessageLogic();
+import java.util.Scanner;
 
-        abnMessageLogic.sendTransaction(
-                "NLABNA0123456781",
-                "NLABNA0123456782",
-                1.25);
+public class AbnMain {
+    private static AbnMessageLogic abnMessageLogic;
+    public static void main(String[] args) {
+        abnMessageLogic = new AbnMessageLogic();
+
+        Scanner in = new Scanner(System.in);
+        while (in.hasNext()) {
+            String i = in.next();
+            abnMessageLogic.sendTransaction(
+                    "NLABNA0123456781",
+                    "NLABNA0123456782",
+                    1.25);
+        }
     }
 }

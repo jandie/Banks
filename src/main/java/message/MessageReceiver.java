@@ -16,8 +16,6 @@ public class MessageReceiver {
         factory.setHost("localhost");
         connection = factory.newConnection();
         channel = connection.createChannel();
-        channel.queueDeclare(queue, true, false,
-                false, null);
 
         if (basicQos)
             channel.basicQos(1);
@@ -25,6 +23,13 @@ public class MessageReceiver {
 
     public void setListener(Consumer consumer) throws IOException {
         channel.basicConsume(queueName, false, consumer);
+
+        startListening();
+    }
+
+    private void startListening() throws IOException {
+        channel.queueDeclare(queueName, true, false,
+                false, null);
     }
 
     public void acknowledge(Envelope envelope) throws IOException {

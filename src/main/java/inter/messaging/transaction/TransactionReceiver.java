@@ -5,7 +5,7 @@ import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 import inter.domain.InterTransaction;
 import message.MessageReceiver;
-import util.GsonUtil;
+import util.JsonUtil;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -13,7 +13,7 @@ import java.util.concurrent.TimeoutException;
 public class TransactionReceiver {
     private MessageReceiver receiver;
     private Envelope currentEnvelope;
-    private GsonUtil gsonUtil = new GsonUtil();
+    private JsonUtil jsonUtil = new JsonUtil();
 
     public TransactionReceiver() {
         try {
@@ -25,15 +25,15 @@ public class TransactionReceiver {
                                            AMQP.BasicProperties properties, byte[] body)
                         throws IOException {
                     String json = new String(body, "UTF-8");
-                    InterTransaction transaction = gsonUtil.decode(
+                    //System.out.println(" [x] Received '" + json + "'");
+
+                    InterTransaction transaction = jsonUtil.decode(
                             json,
                             InterTransaction.class);
 
                     currentEnvelope = envelope;
 
                     handleNewTransaction(transaction);
-
-                    System.out.println(" [x] Received '" + json + "'");
                 }
             });
         } catch (IOException | TimeoutException e) {

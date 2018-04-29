@@ -16,6 +16,8 @@ public class AbnTransaction implements Serializable {
     private String fromReference;
     private AbnState state;
 
+    public AbnTransaction() {}
+
     public AbnTransaction(String toAccount, String fromAccount, double amount, String fromReference) {
         AccountCodeUtil accountCodeUtil = new AccountCodeUtil();
 
