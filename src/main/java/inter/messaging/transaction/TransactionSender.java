@@ -1,4 +1,4 @@
-package inter.messaging;
+package inter.messaging.transaction;
 
 import inter.domain.InterTransaction;
 import message.MessageSender;

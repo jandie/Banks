@@ -2,7 +2,11 @@ package inter.domain;
 
 import inter.domain.enums.InterState;
 
-public class InterFeedback {
+import java.io.Serializable;
+
+public class InterFeedback implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private InterTransaction transaction;
     private InterState state;
     private String message;
