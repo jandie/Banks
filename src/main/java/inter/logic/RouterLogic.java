@@ -2,6 +2,7 @@ package inter.logic;
 
 import inter.domain.InterFeedback;
 import inter.domain.InterTransaction;
+import inter.domain.enums.InterState;
 import inter.messaging.feedback.FeedbackReceiver;
 import inter.messaging.feedback.FeedbackSender;
 import inter.messaging.transaction.TransactionReceiver;
@@ -36,10 +37,22 @@ public class RouterLogic {
     private void handleNewTransaction(InterTransaction transaction) {
         transactionSender.sendTransaction(transaction);
         transactionReceiver.acknowledge();
+
+        feedbackSender.sendFeedback(
+                new InterFeedback(
+                        transaction,
+                        InterState.ROUTED,
+                        "Interrouter routed this transaction"
+                )
+        );
+
+        System.out.println("Routed " + transaction);
     }
 
     private void handleNewFeedback(InterFeedback feedback) {
         feedbackSender.sendFeedback(feedback);
         feedbackReceiver.acknowledge();
+
+        System.out.println("Handled feedback");
     }
 }
