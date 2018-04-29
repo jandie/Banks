@@ -12,13 +12,15 @@ public class InterTransaction implements Serializable {
     private String toBankCode;
     private String fromBankCode;
     private long amount;
+    private String fromReference;
 
-    public InterTransaction(String toAccount, String fromAccount, long amount) {
+    public InterTransaction(String toAccount, String fromAccount, long amount, String fromReference) {
         AccountCodeUtil accountCodeUtil = new AccountCodeUtil();
 
         this.toAccount = toAccount;
         this.fromAccount = fromAccount;
         this.amount = amount;
+        this.fromReference = fromReference;
 
         this.toBankCode = accountCodeUtil.getCodeFromAccount(toAccount);
         this.fromBankCode = accountCodeUtil.getCodeFromAccount(fromAccount);
@@ -42,5 +44,18 @@ public class InterTransaction implements Serializable {
 
     public long getAmount() {
         return amount;
+    }
+
+    public String getFromReference() {
+        return fromReference;
+    }
+
+    public void setFromReference(String fromReference) {
+        this.fromReference = fromReference;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction from: " + fromAccount + " to: " + toAccount + " amount: " + amount;
     }
 }
