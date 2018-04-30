@@ -12,7 +12,6 @@ import java.util.concurrent.TimeoutException;
 
 public class TransactionReceiver {
     private MessageReceiver receiver;
-    private Envelope currentEnvelope;
     private JsonUtil jsonUtil = new JsonUtil();
 
     public TransactionReceiver() {
@@ -25,15 +24,13 @@ public class TransactionReceiver {
                                            AMQP.BasicProperties properties, byte[] body)
                         throws IOException {
                     String json = new String(body, "UTF-8");
-                    //System.out.println(" [x] Received '" + json + "'");
 
                     InterTransaction transaction = jsonUtil.decode(
                             json,
                             InterTransaction.class);
 
-                    currentEnvelope = envelope;
-
                     handleNewTransaction(transaction);
+                    receiver.acknowledge(envelope);
                 }
             });
         } catch (IOException | TimeoutException e) {
@@ -42,13 +39,5 @@ public class TransactionReceiver {
     }
 
     public void handleNewTransaction(InterTransaction transaction) {
-    }
-
-    public void acknowledge() {
-        try {
-            receiver.acknowledge(currentEnvelope);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

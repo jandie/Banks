@@ -14,7 +14,6 @@ import java.util.concurrent.TimeoutException;
 
 public class RaboTransactionReceiver {
     private MessageReceiver receiver;
-    private Envelope currentEnvelope;
     private JsonUtil jsonUtil = new JsonUtil();
     private RaboTranslator raboTranslator = new RaboTranslator();
 
@@ -32,11 +31,8 @@ public class RaboTransactionReceiver {
                             json,
                             InterTransaction.class);
 
-                    currentEnvelope = envelope;
-
-                    handleNewTransaction(
-                            raboTranslator.transaction(abnTransaction)
-                    );
+                    handleNewTransaction(raboTranslator.transaction(abnTransaction));
+                    receiver.acknowledge(envelope);
                 }
             });
         } catch (IOException | TimeoutException e) {
@@ -45,13 +41,5 @@ public class RaboTransactionReceiver {
     }
 
     public void handleNewTransaction(RaboTransaction transaction) {
-    }
-
-    public void acknowledge() {
-        try {
-            receiver.acknowledge(currentEnvelope);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

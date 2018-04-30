@@ -20,7 +20,7 @@ public class MessageReceiver {
                 false, null);
 
         if (basicQos)
-            channel.basicQos(1);
+            channel.basicQos(10);
     }
 
     public void setListener(Consumer consumer) throws IOException {

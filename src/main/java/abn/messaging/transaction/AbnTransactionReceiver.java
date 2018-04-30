@@ -14,7 +14,6 @@ import java.util.concurrent.TimeoutException;
 
 public class AbnTransactionReceiver {
     private MessageReceiver receiver;
-    private Envelope currentEnvelope;
     private JsonUtil jsonUtil = new JsonUtil();
     private AbnTranslator abnTranslator = new AbnTranslator();
 
@@ -32,13 +31,8 @@ public class AbnTransactionReceiver {
                             json,
                             InterTransaction.class);
 
-                    currentEnvelope = envelope;
-
-                    handleNewTransaction(
-                            abnTranslator.transaction(abnTransaction)
-                    );
-
-                    //System.out.println(" [x] Received '" + json + "'");
+                    handleNewTransaction(abnTranslator.transaction(abnTransaction));
+                    receiver.acknowledge(envelope);
                 }
             });
         } catch (IOException | TimeoutException e) {
@@ -47,13 +41,5 @@ public class AbnTransactionReceiver {
     }
 
     public void handleNewTransaction(AbnTransaction transaction) {
-    }
-
-    public void acknowledge() {
-        try {
-            receiver.acknowledge(currentEnvelope);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

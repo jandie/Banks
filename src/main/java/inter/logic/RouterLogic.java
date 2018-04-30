@@ -9,24 +9,17 @@ import inter.messaging.transaction.TransactionReceiver;
 import inter.messaging.transaction.TransactionSender;
 
 public class RouterLogic {
-    private TransactionReceiver transactionReceiver;
-    private TransactionSender transactionSender;
-
-    private FeedbackReceiver feedbackReceiver;
-    private FeedbackSender feedbackSender;
 
     public RouterLogic() {
-        transactionSender = new TransactionSender();
-        feedbackSender = new FeedbackSender();
 
-        transactionReceiver = new TransactionReceiver(){
+        new TransactionReceiver() {
             @Override
             public void handleNewTransaction(InterTransaction transaction) {
                 RouterLogic.this.handleNewTransaction(transaction);
             }
         };
 
-        feedbackReceiver = new FeedbackReceiver(){
+        new FeedbackReceiver() {
             @Override
             public void handleNewFeedback(InterFeedback feedback) {
                 RouterLogic.this.handleNewFeedback(feedback);
@@ -36,11 +29,10 @@ public class RouterLogic {
         System.out.println("Router initialized!");
     }
 
-    private synchronized  void handleNewTransaction(InterTransaction transaction) {
-        transactionSender.sendTransaction(transaction);
-        transactionReceiver.acknowledge();
+    private void handleNewTransaction(InterTransaction transaction) {
+        new TransactionSender().sendTransaction(transaction);
 
-        feedbackSender.sendFeedback(
+        new FeedbackSender().sendFeedback(
                 new InterFeedback(
                         transaction,
                         InterState.ROUTED,
@@ -51,9 +43,8 @@ public class RouterLogic {
         System.out.println("Routed " + transaction);
     }
 
-    private synchronized  void handleNewFeedback(InterFeedback feedback) {
-        feedbackSender.sendFeedback(feedback);
-        feedbackReceiver.acknowledge();
+    private void handleNewFeedback(InterFeedback feedback) {
+        new FeedbackSender().sendFeedback(feedback);
 
         System.out.println("Handled feedback");
     }

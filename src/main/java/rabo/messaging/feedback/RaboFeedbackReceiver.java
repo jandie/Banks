@@ -14,7 +14,6 @@ import java.util.concurrent.TimeoutException;
 
 public class RaboFeedbackReceiver {
     private MessageReceiver receiver;
-    private Envelope currentEnvelope;
     private JsonUtil jsonUtil = new JsonUtil();
     private RaboTranslator raboTranslator = new RaboTranslator();
 
@@ -32,11 +31,8 @@ public class RaboFeedbackReceiver {
                             json,
                             InterFeedback.class);
 
-                    currentEnvelope = envelope;
-
-                    handleNewFeedback(
-                            raboTranslator.feedback(interFeedback)
-                    );
+                    handleNewFeedback(raboTranslator.feedback(interFeedback));
+                    receiver.acknowledge(envelope);
                 }
             });
         } catch (IOException | TimeoutException e) {
@@ -45,13 +41,5 @@ public class RaboFeedbackReceiver {
     }
 
     public void handleNewFeedback(RaboFeedback feedback) {
-    }
-
-    public void acknowledge() {
-        try {
-            receiver.acknowledge(currentEnvelope);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
