@@ -16,9 +16,7 @@ public class CacheProcessLogic {
 
     public void processCache() {
         TransactionRepo repo = new TransactionRepo();
-        List<InterTransaction> transactions = repo.getAllTransactions();
-
-        repo.deleteAll();
+        List<InterTransaction> transactions = repo.getAllAndDelete();
 
         HashMap<String, InterTransaction> transactionsMap = combineTransactions(transactions);
 

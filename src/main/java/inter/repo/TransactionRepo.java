@@ -11,8 +11,10 @@ public class TransactionRepo {
     private DB db;
 
     public TransactionRepo() {
-        this.client = new MongoClient( "localhost" , 27017 );
-        db = this.client.getDB("banks");
+        String mongoUri = System.getenv("BANKS_MONGO_URI");
+        MongoClientURI uri = new MongoClientURI(mongoUri);
+        this.client = new MongoClient( uri );
+        db = this.client.getDB("CloudFoundry_h9jb8f5v_3i76sdra");
     }
 
     public void saveTransaction(InterTransaction transaction) {
@@ -68,6 +70,25 @@ public class TransactionRepo {
 
         while (cursor.hasNext()) {
             BasicDBObject obj = (BasicDBObject) cursor.next();
+
+            InterTransaction trans =
+                    TransactionAdaptor.toInterTransaction(obj);
+
+            interTransactions.add(trans);
+        }
+
+        return interTransactions;
+    }
+
+    public List<InterTransaction> getAllAndDelete() {
+        DBCollection collection = db.getCollection("transaction");
+        DBCursor cursor = collection.find();
+        List<InterTransaction> interTransactions = new ArrayList<>();
+
+        while (cursor.hasNext()) {
+            BasicDBObject obj = (BasicDBObject) cursor.next();
+
+            collection.remove(obj);
 
             InterTransaction trans =
                     TransactionAdaptor.toInterTransaction(obj);
