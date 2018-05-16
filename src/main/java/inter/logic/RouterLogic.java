@@ -16,6 +16,7 @@ import java.util.Map;
 
 public class RouterLogic {
     private Map<String, Long> counter = Collections.synchronizedMap(new HashMap<>());
+    private TransactionRepo repo = new TransactionRepo();
 
     public RouterLogic() {
         new TransactionReceiver() {
@@ -53,9 +54,7 @@ public class RouterLogic {
         return counter.get(key) > 10;
     }
 
-    private void handleNewTransaction(InterTransaction transaction) {
-        TransactionRepo repo = new TransactionRepo();
-
+    private synchronized void handleNewTransaction(InterTransaction transaction) {
         increaseCounter(transaction);
 
         if (hasBigCounter(transaction)) {
@@ -74,8 +73,6 @@ public class RouterLogic {
                         "Interrouter routed this transaction"
                 )
         );
-
-        repo.close();
     }
 
     public void sendTransaction(InterTransaction transaction) {
