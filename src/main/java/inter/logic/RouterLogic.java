@@ -10,11 +10,14 @@ import inter.messaging.transaction.TransactionSender;
 import inter.repo.TransactionRepo;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RouterLogic {
+    private Map<String, Long> counter = Collections.synchronizedMap(new HashMap<>());
 
     public RouterLogic() {
-
         new TransactionReceiver() {
             @Override
             public void handleNewTransaction(InterTransaction transaction) {
@@ -32,30 +35,36 @@ public class RouterLogic {
         System.out.println("Router initialized!");
     }
 
+    private synchronized void increaseCounter(InterTransaction transaction) {
+        String key = transaction.getToAccount() + transaction.getFromAccount();
+
+        if (!counter.containsKey(key)) {
+            counter.put(key, 0L);
+        }
+
+        counter.put(key, counter.get(key) + 1);
+    }
+
+    private synchronized boolean hasBigCounter(InterTransaction transaction) {
+        String key = transaction.getToAccount() + transaction.getFromAccount();
+
+        if (!counter.containsKey(key)) return false;
+
+        return counter.get(key) > 10;
+    }
+
     private void handleNewTransaction(InterTransaction transaction) {
         TransactionRepo repo = new TransactionRepo();
-        InterTransaction similarTransaction =
-                repo.getSimilarTransaction(transaction);
 
-        if (similarTransaction != null &&
-                similarTransaction.getCount() > 10) {
-            similarTransaction.increaseCount();
-            similarTransaction.addAmount(transaction.getAmount());
-            similarTransaction.addFromReferences(transaction.getFromReferences());
-            repo.UpdateTransaction(similarTransaction);
-        }
-        else if(similarTransaction != null && similarTransaction.getCount() <= 10) {
-            similarTransaction.increaseCount();
-            repo.UpdateTransaction(similarTransaction);
-            new TransactionSender().sendTransaction(transaction);
+        increaseCounter(transaction);
+
+        if (hasBigCounter(transaction)) {
+            repo.saveTransaction(transaction);
+            System.out.println("Saved " + transaction);
         }
         else {
-            repo.SaveTransaction(new InterTransaction(
-                    transaction.getToAccount(),
-                    transaction.getFromAccount(),
-                    0,
-                    new ArrayList<>()));
-            new TransactionSender().sendTransaction(transaction);
+            sendTransaction(transaction);
+            System.out.println("Routed " + transaction);
         }
 
         new FeedbackSender().sendFeedback(
@@ -66,7 +75,11 @@ public class RouterLogic {
                 )
         );
 
-        System.out.println("Routed " + transaction);
+        repo.close();
+    }
+
+    public void sendTransaction(InterTransaction transaction) {
+        new TransactionSender().sendTransaction(transaction);
     }
 
     private void handleNewFeedback(InterFeedback feedback) {

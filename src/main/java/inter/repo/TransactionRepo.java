@@ -3,22 +3,26 @@ package inter.repo;
 import com.mongodb.*;
 import inter.domain.InterTransaction;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TransactionRepo {
+    private MongoClient client;
     private DB db;
 
     public TransactionRepo() {
-        db = new MongoClient( "localhost" , 27017 )
-                .getDB("banks");
+        this.client = new MongoClient( "localhost" , 27017 );
+        db = this.client.getDB("banks");
     }
 
-    public void SaveTransaction(InterTransaction transaction) {
+    public void saveTransaction(InterTransaction transaction) {
         DBCollection collection = db.getCollection("transaction");
         collection.insert(TransactionAdaptor.toDbObject(transaction));
 
         System.out.println(TransactionAdaptor.toDbObject(transaction).toJson());
     }
 
-    public void UpdateTransaction(InterTransaction transaction) {
+    public void updateTransaction(InterTransaction transaction) {
         DBCollection collection = db.getCollection("transaction");
 
         BasicDBObject searchQuery = new BasicDBObject()
@@ -47,7 +51,7 @@ public class TransactionRepo {
         return null;
     }
 
-    public void DeleteSimilarTransaction(InterTransaction transaction) {
+    public void deleteSimilarTransaction(InterTransaction transaction) {
         DBCollection collection = db.getCollection("transaction");
 
         BasicDBObject searchQuery = new BasicDBObject()
@@ -55,5 +59,35 @@ public class TransactionRepo {
                 .append("toAccount", transaction.getToAccount());
 
         collection.remove(searchQuery);
+    }
+
+    public List<InterTransaction> getAllTransactions() {
+        DBCollection collection = db.getCollection("transaction");
+        DBCursor cursor = collection.find();
+        List<InterTransaction> interTransactions = new ArrayList<>();
+
+        while (cursor.hasNext()) {
+            BasicDBObject obj = (BasicDBObject) cursor.next();
+
+            InterTransaction trans =
+                    TransactionAdaptor.toInterTransaction(obj);
+
+            interTransactions.add(trans);
+        }
+
+        return interTransactions;
+    }
+
+    public void deleteAll() {
+        DBCollection collection = db.getCollection("transaction");
+        // Delete All documents from collection using DBCursor
+        DBCursor cursor = collection.find();
+        while (cursor.hasNext()) {
+            collection.remove(cursor.next());
+        }
+    }
+
+    public void close() {
+        client.close();
     }
 }

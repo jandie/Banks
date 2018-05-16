@@ -17,9 +17,9 @@ public class TransactionRepoIT {
                 50.6,
                 new ArrayList<>(Arrays.asList("testreference")));
 
-        new TransactionRepo().SaveTransaction(interTransaction);
+        new TransactionRepo().saveTransaction(interTransaction);
 
-        new TransactionRepo().DeleteSimilarTransaction(interTransaction);
+        new TransactionRepo().deleteSimilarTransaction(interTransaction);
     }
 
     @Test
@@ -30,14 +30,14 @@ public class TransactionRepoIT {
                 50.6,
                 new ArrayList<>(Arrays.asList("testreference")));
 
-        new TransactionRepo().SaveTransaction(interTransaction);
+        new TransactionRepo().saveTransaction(interTransaction);
 
         interTransaction = new TransactionRepo()
                 .getSimilarTransaction(interTransaction);
 
         System.out.println(interTransaction.toString());
 
-        new TransactionRepo().DeleteSimilarTransaction(interTransaction);
+        new TransactionRepo().deleteSimilarTransaction(interTransaction);
     }
 
     @Test
@@ -48,18 +48,18 @@ public class TransactionRepoIT {
                 50.6,
                 new ArrayList<>(Arrays.asList("testreference")));
 
-        new TransactionRepo().SaveTransaction(interTransaction);
+        new TransactionRepo().saveTransaction(interTransaction);
 
         interTransaction.increaseCount();
         interTransaction.increaseCount();
         interTransaction.increaseCount();
 
-        new TransactionRepo().UpdateTransaction(interTransaction);
+        new TransactionRepo().updateTransaction(interTransaction);
 
         interTransaction = new TransactionRepo()
                 .getSimilarTransaction(interTransaction);
 
-        new TransactionRepo().DeleteSimilarTransaction(interTransaction);
+        new TransactionRepo().deleteSimilarTransaction(interTransaction);
 
         Assert.assertEquals(4, interTransaction.getCount());
     }
