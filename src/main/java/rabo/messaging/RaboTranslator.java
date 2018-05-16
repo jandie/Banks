@@ -1,8 +1,5 @@
 package rabo.messaging;
 
-import abn.domain.AbnFeedback;
-import abn.domain.AbnTransaction;
-import abn.domain.enums.AbnState;
 import inter.domain.InterFeedback;
 import inter.domain.InterTransaction;
 import inter.domain.enums.InterState;
@@ -16,7 +13,7 @@ public class RaboTranslator {
                 interTransaction.getToAccount(),
                 interTransaction.getFromAccount(),
                 interTransaction.getAmount(),
-                interTransaction.getFromReference());
+                interTransaction.getFromReferences());
     }
 
     public InterTransaction transaction(RaboTransaction raboTransaction) {
@@ -24,7 +21,7 @@ public class RaboTranslator {
                 raboTransaction.getToAccount(),
                 raboTransaction.getFromAccount(),
                 raboTransaction.getAmount(),
-                raboTransaction.getFromReference());
+                raboTransaction.getFromReferences());
     }
 
     public RaboFeedback feedback(InterFeedback interFeedback) {

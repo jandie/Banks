@@ -8,6 +8,9 @@ import rabo.messaging.feedback.RaboFeedbackSender;
 import rabo.messaging.transaction.RaboTransactionReceiver;
 import rabo.messaging.transaction.RaboTransactionSender;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class RaboMessageLogic {
     private Double transactionCounter = 0.0;
 
@@ -31,7 +34,8 @@ public class RaboMessageLogic {
                 to,
                 from,
                 amount,
-                transactionCounter.toString());
+                new ArrayList<>(
+                        Arrays.asList(transactionCounter.toString())));
 
         new RaboTransactionSender().sendTransaction(transaction);
 

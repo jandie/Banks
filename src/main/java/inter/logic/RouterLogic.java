@@ -7,6 +7,9 @@ import inter.messaging.feedback.FeedbackReceiver;
 import inter.messaging.feedback.FeedbackSender;
 import inter.messaging.transaction.TransactionReceiver;
 import inter.messaging.transaction.TransactionSender;
+import inter.repo.TransactionRepo;
+
+import java.util.ArrayList;
 
 public class RouterLogic {
 
@@ -30,7 +33,30 @@ public class RouterLogic {
     }
 
     private void handleNewTransaction(InterTransaction transaction) {
-        new TransactionSender().sendTransaction(transaction);
+        TransactionRepo repo = new TransactionRepo();
+        InterTransaction similarTransaction =
+                repo.getSimilarTransaction(transaction);
+
+        if (similarTransaction != null &&
+                similarTransaction.getCount() > 10) {
+            similarTransaction.increaseCount();
+            similarTransaction.addAmount(transaction.getAmount());
+            similarTransaction.addFromReferences(transaction.getFromReferences());
+            repo.UpdateTransaction(similarTransaction);
+        }
+        else if(similarTransaction != null && similarTransaction.getCount() <= 10) {
+            similarTransaction.increaseCount();
+            repo.UpdateTransaction(similarTransaction);
+            new TransactionSender().sendTransaction(transaction);
+        }
+        else {
+            repo.SaveTransaction(new InterTransaction(
+                    transaction.getToAccount(),
+                    transaction.getFromAccount(),
+                    0,
+                    new ArrayList<>()));
+            new TransactionSender().sendTransaction(transaction);
+        }
 
         new FeedbackSender().sendFeedback(
                 new InterFeedback(

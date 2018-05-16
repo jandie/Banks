@@ -4,6 +4,7 @@ import abn.domain.enums.AbnState;
 import util.AccountCodeUtil;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class AbnTransaction implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -13,18 +14,18 @@ public class AbnTransaction implements Serializable {
     private String toBankCode;
     private String fromBankCode;
     private double amount;
-    private String fromReference;
+    private List<String> fromReferences;
     private AbnState state;
 
     public AbnTransaction() {}
 
-    public AbnTransaction(String toAccount, String fromAccount, double amount, String fromReference) {
+    public AbnTransaction(String toAccount, String fromAccount, double amount, List<String> fromReferences) {
         AccountCodeUtil accountCodeUtil = new AccountCodeUtil();
 
         this.toAccount = toAccount;
         this.fromAccount = fromAccount;
         this.amount = amount;
-        this.fromReference = fromReference;
+        this.fromReferences = fromReferences;
         this.state = AbnState.SENT;
 
         this.toBankCode = accountCodeUtil.getCodeFromAccount(toAccount);
@@ -51,20 +52,20 @@ public class AbnTransaction implements Serializable {
         return amount;
     }
 
-    public String getFromReference() {
-        return fromReference;
-    }
-
-    public void setFromReference(String fromReference) {
-        this.fromReference = fromReference;
-    }
-
     public AbnState getState() {
         return state;
     }
 
     public void setState(AbnState state) {
         this.state = state;
+    }
+
+    public List<String> getFromReferences() {
+        return fromReferences;
+    }
+
+    public void setFromReferences(List<String> fromReferences) {
+        this.fromReferences = fromReferences;
     }
 
     @Override
