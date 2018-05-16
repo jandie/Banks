@@ -7,11 +7,17 @@ import inter.messaging.feedback.FeedbackReceiver;
 import inter.messaging.feedback.FeedbackSender;
 import inter.messaging.transaction.TransactionReceiver;
 import inter.messaging.transaction.TransactionSender;
+import inter.repo.TransactionRepo;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RouterLogic {
+    private Map<String, Long> counter = Collections.synchronizedMap(new HashMap<>());
 
     public RouterLogic() {
-
         new TransactionReceiver() {
             @Override
             public void handleNewTransaction(InterTransaction transaction) {
@@ -29,8 +35,37 @@ public class RouterLogic {
         System.out.println("Router initialized!");
     }
 
+    private synchronized void increaseCounter(InterTransaction transaction) {
+        String key = transaction.getToAccount() + transaction.getFromAccount();
+
+        if (!counter.containsKey(key)) {
+            counter.put(key, 0L);
+        }
+
+        counter.put(key, counter.get(key) + 1);
+    }
+
+    private synchronized boolean hasBigCounter(InterTransaction transaction) {
+        String key = transaction.getToAccount() + transaction.getFromAccount();
+
+        if (!counter.containsKey(key)) return false;
+
+        return counter.get(key) > 10;
+    }
+
     private void handleNewTransaction(InterTransaction transaction) {
-        new TransactionSender().sendTransaction(transaction);
+        TransactionRepo repo = new TransactionRepo();
+
+        increaseCounter(transaction);
+
+        if (hasBigCounter(transaction)) {
+            repo.saveTransaction(transaction);
+            System.out.println("Saved " + transaction);
+        }
+        else {
+            sendTransaction(transaction);
+            System.out.println("Routed " + transaction);
+        }
 
         new FeedbackSender().sendFeedback(
                 new InterFeedback(
@@ -40,7 +75,11 @@ public class RouterLogic {
                 )
         );
 
-        System.out.println("Routed " + transaction);
+        repo.close();
+    }
+
+    public void sendTransaction(InterTransaction transaction) {
+        new TransactionSender().sendTransaction(transaction);
     }
 
     private void handleNewFeedback(InterFeedback feedback) {

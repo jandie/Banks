@@ -8,6 +8,9 @@ import abn.messaging.feedback.AbnFeedbackSender;
 import abn.messaging.transaction.AbnTransactionReceiver;
 import abn.messaging.transaction.AbnTransactionSender;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class AbnMessageLogic {
     private Double transactionCounter = 0.0;
 
@@ -31,7 +34,8 @@ public class AbnMessageLogic {
                 to,
                 from,
                 amount,
-                transactionCounter.toString());
+                new ArrayList<>(
+                        Arrays.asList(transactionCounter.toString())));
 
         new AbnTransactionSender().sendTransaction(transaction);
 

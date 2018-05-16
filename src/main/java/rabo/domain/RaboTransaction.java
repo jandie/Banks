@@ -4,6 +4,7 @@ import rabo.domain.enums.RaboState;
 import util.AccountCodeUtil;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class RaboTransaction implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -13,18 +14,18 @@ public class RaboTransaction implements Serializable {
     private String toBankCode;
     private String fromBankCode;
     private double amount;
-    private String fromReference;
+    private List<String> fromReferences;
     private RaboState state;
 
     public RaboTransaction() {}
 
-    public RaboTransaction(String toAccount, String fromAccount, double amount, String fromReference) {
+    public RaboTransaction(String toAccount, String fromAccount, double amount, List<String> fromReferences) {
         AccountCodeUtil accountCodeUtil = new AccountCodeUtil();
 
         this.toAccount = toAccount;
         this.fromAccount = fromAccount;
         this.amount = amount;
-        this.fromReference = fromReference;
+        this.fromReferences = fromReferences;
         this.state = RaboState.SENT;
 
         this.toBankCode = accountCodeUtil.getCodeFromAccount(toAccount);
@@ -51,12 +52,12 @@ public class RaboTransaction implements Serializable {
         return amount;
     }
 
-    public String getFromReference() {
-        return fromReference;
+    public List<String> getFromReferences() {
+        return fromReferences;
     }
 
-    public void setFromReference(String fromReference) {
-        this.fromReference = fromReference;
+    public void setFromReferences(List<String> fromReferences) {
+        this.fromReferences = fromReferences;
     }
 
     public RaboState getState() {

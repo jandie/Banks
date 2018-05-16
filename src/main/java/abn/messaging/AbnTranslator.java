@@ -13,7 +13,7 @@ public class AbnTranslator {
                 interTransaction.getToAccount(),
                 interTransaction.getFromAccount(),
                 interTransaction.getAmount(),
-                interTransaction.getFromReference());
+                interTransaction.getFromReferences());
     }
 
     public InterTransaction transaction(AbnTransaction abnTransaction) {
@@ -21,7 +21,7 @@ public class AbnTranslator {
                 abnTransaction.getToAccount(),
                 abnTransaction.getFromAccount(),
                 abnTransaction.getAmount(),
-                abnTransaction.getFromReference());
+                abnTransaction.getFromReferences());
     }
 
     public AbnFeedback feedback(InterFeedback interFeedback) {
