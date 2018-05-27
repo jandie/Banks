@@ -36,7 +36,7 @@ public class RouterLogic {
         System.out.println("Router initialized!");
     }
 
-    private synchronized void increaseCounter(InterTransaction transaction) {
+    private void increaseCounter(InterTransaction transaction) {
         String key = transaction.getToAccount() + transaction.getFromAccount();
 
         if (!counter.containsKey(key)) {
@@ -46,7 +46,7 @@ public class RouterLogic {
         counter.put(key, counter.get(key) + 1);
     }
 
-    private synchronized boolean hasBigCounter(InterTransaction transaction) {
+    private boolean hasBigCounter(InterTransaction transaction) {
         String key = transaction.getToAccount() + transaction.getFromAccount();
 
         if (!counter.containsKey(key)) return false;
@@ -54,11 +54,11 @@ public class RouterLogic {
         return counter.get(key) > 10;
     }
 
-    private synchronized void handleNewTransaction(InterTransaction transaction) {
+    private void handleNewTransaction(InterTransaction transaction) {
         increaseCounter(transaction);
 
         if (hasBigCounter(transaction)) {
-            repo.saveTransaction(transaction);
+            saveTransaction(transaction);
             System.out.println("Saved " + transaction);
         }
         else {
@@ -73,6 +73,10 @@ public class RouterLogic {
                         "Interrouter routed this transaction"
                 )
         );
+    }
+
+    private synchronized void saveTransaction(InterTransaction transaction) {
+        repo.saveTransaction(transaction);
     }
 
     public void sendTransaction(InterTransaction transaction) {

@@ -7,13 +7,8 @@ import java.util.Arrays;
 
 public class AbnIT {
     @Test
-    public void SendOneHundredTransactionsToRabo() {
-        sendTransactionsToRabo(100);
-    }
-
-    @Test
-    public void SendOneTransactionsToRabo() {
-        sendTransactionsToRabo(1);
+    public void SendThousandTransactionsToRabo() {
+        sendTransactionsToRabo(1000);
     }
 
     private void sendTransactionsToRabo(int amount) {

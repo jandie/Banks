@@ -14,7 +14,7 @@ public class TransactionRepo {
         String mongoUri = System.getenv("BANKS_MONGO_URI");
         MongoClientURI uri = new MongoClientURI(mongoUri);
         this.client = new MongoClient( uri );
-        db = this.client.getDB("CloudFoundry_h9jb8f5v_3i76sdra");
+        db = this.client.getDB("banks");
     }
 
     public void saveTransaction(InterTransaction transaction) {
