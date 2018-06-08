@@ -20,7 +20,7 @@ public class RaboFeedbackSender {
             messageSender.send(
                     jsonUtil.encode(
                             raboTranslator.feedback(raboFeedback)));
-        } catch (IOException | TimeoutException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             messageSender.close();

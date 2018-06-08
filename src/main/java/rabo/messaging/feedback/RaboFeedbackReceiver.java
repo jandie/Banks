@@ -35,7 +35,7 @@ public class RaboFeedbackReceiver {
                     receiver.acknowledge(envelope);
                 }
             });
-        } catch (IOException | TimeoutException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

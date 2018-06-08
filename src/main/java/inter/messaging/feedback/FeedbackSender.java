@@ -16,7 +16,7 @@ public class FeedbackSender {
             messageSender = new MessageSender(
                     feedback.getTransaction().getFromBankCode() + "feedback");
             messageSender.send(jsonUtil.encode(feedback));
-        } catch (IOException | TimeoutException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             messageSender.close();

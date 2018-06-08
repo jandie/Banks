@@ -3,6 +3,9 @@ package message;
 import com.rabbitmq.client.*;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeoutException;
 
 public class MessageReceiver {
@@ -10,10 +13,11 @@ public class MessageReceiver {
     private Channel channel;
     private String queueName;
 
-    public MessageReceiver(String queue, boolean basicQos) throws IOException, TimeoutException {
+    public MessageReceiver(String queue, boolean basicQos) throws IOException, TimeoutException,
+            NoSuchAlgorithmException, KeyManagementException, URISyntaxException {
         queueName = queue;
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        factory.setUri(System.getenv("RABBIT_MQ_URI"));
         connection = factory.newConnection();
         channel = connection.createChannel();
         channel.queueDeclare(queueName, true, false,

@@ -33,7 +33,7 @@ public class FeedbackReceiver {
                     receiver.acknowledge(envelope);
                 }
             });
-        } catch (IOException | TimeoutException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

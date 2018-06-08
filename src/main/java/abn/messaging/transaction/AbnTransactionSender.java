@@ -13,6 +13,7 @@ public class AbnTransactionSender {
     private JsonUtil jsonUtil = new JsonUtil();
     private AbnTranslator abnTranslator = new AbnTranslator();
 
+    @SuppressWarnings("Duplicates")
     public void sendTransaction(AbnTransaction abnTransaction) {
         try {
             messageSender = new MessageSender("IntercomReceive");
@@ -20,7 +21,7 @@ public class AbnTransactionSender {
                     jsonUtil.encode(
                             abnTranslator.transaction(abnTransaction)));
 
-        } catch (IOException | TimeoutException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             messageSender.close();

@@ -7,6 +7,9 @@ import rabo.messaging.RaboTranslator;
 import util.JsonUtil;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeoutException;
 
 @SuppressWarnings("Duplicates")
@@ -22,7 +25,7 @@ public class RaboTransactionSender {
                     jsonUtil.encode(
                             raboTranslator.transaction(raboTransaction)));
 
-        } catch (IOException | TimeoutException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             messageSender.close();

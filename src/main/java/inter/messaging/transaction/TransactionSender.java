@@ -15,7 +15,7 @@ public class TransactionSender {
         try {
             messageSender = new MessageSender(transaction.getToBankCode());
             messageSender.send(jsonUtil.encode(transaction));
-        } catch (IOException | TimeoutException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             messageSender.close();

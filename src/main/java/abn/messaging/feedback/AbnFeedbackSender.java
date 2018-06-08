@@ -19,7 +19,7 @@ public class AbnFeedbackSender {
             messageSender.send(
                     jsonUtil.encode(
                             abnTranslator.feedback(abnFeedback)));
-        } catch (IOException | TimeoutException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             messageSender.close();
